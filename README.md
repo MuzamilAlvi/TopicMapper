@@ -1,4 +1,4 @@
-# Intelligent Batch Video File Renaming System Using Official Topic Names
+# TopicMapper – Intelligent Batch Video File Renaming System
 
 A modern desktop app (Python backend + web frontend) that batch-renames educational video files by matching extracted topic numbers from downloaded filenames to official topic titles provided via a text file.
 

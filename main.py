@@ -8,7 +8,8 @@ def main() -> None:
     index_url = "file:///" + index_path.replace("\\", "/")
 
     window = webview.create_window(
-        title="Video Topic Renamer",
+        title="TopicMapper – Intelligent Batch Video File Renaming System",
+
         url=index_url,
         width=1200,
         height=800,

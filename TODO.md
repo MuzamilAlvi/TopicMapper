@@ -1,17 +1,17 @@
-# TODO - Intelligent Batch Video File Renaming System
+# TODO - TopicMapper – Intelligent Batch Video File Renaming System
 
 ## Step 1: Create project scaffold
 - [x] Create Python backend modules under `backend/`
 - [x] Create frontend files under `frontend/`
-- [ ] Add `main.py` to start the PyWebView app
+- [x] Add `main.py` to start the PyWebView app
 
 ## Step 2: Implement core logic (backend)
 - [x] Implement filename parsing (topic number extraction)
 - [x] Implement topic mapping loader from text file
 - [x] Implement safe rename planning (detect duplicates/unmatched)
-- [ ] Implement renaming executor with extension preservation (in renamer.py)
+- [x] Implement renaming executor with extension preservation (in renamer.py)
 - [ ] Implement report generation (complete + persist)
-- [ ] Implement undo for last operation
+- [x] Implement undo for last operation
 
 ## Step 3: Implement frontend UI (web)
 - [ ] Modern dashboard layout: sidebar + toolbar + cards
@@ -34,4 +34,5 @@
 - [ ] Validate duplicate detection + safe renaming
 - [ ] Validate report contents
 - [ ] Validate undo
+
 
