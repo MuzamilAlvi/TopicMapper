@@ -1,0 +1,13 @@
+:root{--anim:240ms;}
+
+.fade-in{animation:fadeIn var(--anim) ease both;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.toast-pop{animation:toastPop var(--anim) cubic-bezier(.2,.8,.2,1) both;}
+@keyframes toastPop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+.pulse{animation:pulse var(--anim) ease both;}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.01)}100%{transform:scale(1)}}
+
+.bar-anim{transition:width 520ms cubic-bezier(.2,.8,.2,1)}
+

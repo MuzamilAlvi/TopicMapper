@@ -1,0 +1,36 @@
+/* Light/Dark themes */
+
+:root{
+  --bg0:#0b1220;
+  --bg1:#0f1a31;
+  --panel:rgba(255,255,255,.06);
+  --panel2:rgba(255,255,255,.09);
+  --text:#e7eefc;
+  --muted:rgba(231,238,252,.72);
+  --border:rgba(255,255,255,.12);
+
+  --primary:#6d5efc;
+  --success:#20c997;
+  --danger:#ff4d6d;
+  --warning:#ffb020;
+
+  --shadow: 0 14px 40px rgba(0,0,0,.35);
+}
+
+[data-theme='light']{
+  --bg0:#f6f8ff;
+  --bg1:#eef2ff;
+  --panel:rgba(0,0,0,.04);
+  --panel2:rgba(0,0,0,.06);
+  --text:#16233d;
+  --muted:rgba(22,35,61,.7);
+  --border:rgba(0,0,0,.10);
+
+  --primary:#4e45ff;
+  --success:#0aa67b;
+  --danger:#e63b5c;
+  --warning:#d98000;
+
+  --shadow: 0 14px 40px rgba(16,24,40,.16);
+}
+

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video Topic Renamer</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">▶</div>
+        <div>
+          <div class="brand-title">Renamer</div>
+          <div class="brand-sub">Official Topic Names</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" data-view="dashboard" title="Dashboard">
+          <span class="nav-dot"></span>
+          Dashboard
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="themeToggle" class="icon-btn" title="Toggle theme">
+          <span class="icon">☾</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="title">Batch Rename</div>
+          <div class="subtitle">Safe preview • duplicates detection • undo</div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="drop-hint">Drag & Drop: Folder + Topics file</div>
+          <button id="undoBtn" class="btn btn-secondary" disabled title="Undo last rename (Ctrl+Z)">
+            Undo
+          </button>
+        </div>
+      </header>
+
+      <section class="grid">
+        <div class="card">
+          <div class="card-title">Inputs</div>
+
+          <div class="dropzone" id="dropzoneFolder" tabindex="0" role="button" aria-label="Drop video folder">
+            <div class="dz-title">Videos Folder</div>
+            <div class="dz-sub">Drop a folder here</div>
+            <div class="dz-value" id="folderValue">Not selected</div>
+            <input id="folderInput" type="file" webkitdirectory directory multiple accept="video/*" style="display:none" />
+            <div class="dz-actions">
+              <button id="browseFolder" class="btn">Select Folder</button>
+            </div>
+          </div>
+
+          <div class="dropzone" id="dropzoneTopics" tabindex="0" role="button" aria-label="Drop topics text file">
+            <div class="dz-title">Topics Text File</div>
+            <div class="dz-sub">Drop a .txt here</div>
+            <div class="dz-value" id="topicsValue">Not selected</div>
+            <input id="topicsInput" type="file" accept="text/plain" style="display:none" />
+            <div class="dz-actions">
+              <button id="browseTopics" class="btn">Import Topics</button>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <button id="btnPreview" class="btn btn-primary" disabled>Preview</button>
+            <button id="btnRename" class="btn btn-success" disabled>Rename All</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Progress</div>
+          <div class="progress-row">
+            <div class="status-pill" id="statusPill">Idle</div>
+            <div class="muted" id="statusText">Select inputs to begin.</div>
+          </div>
+
+          <div class="progress">
+            <div class="bar" id="progressBar"></div>
+          </div>
+          <div class="muted small" id="progressDetail">0%</div>
+
+          <div class="report-preview" id="reportPreview"></div>
+        </div>
+
+        <div class="card wide">
+          <div class="card-title with-tools">
+            <div>Preview Table</div>
+            <div class="tools">
+              <input id="searchInput" class="input" placeholder="Search by filename or title" />
+              <select id="filterSelect" class="select">
+                <option value="all">All</option>
+                <option value="matched">Matched</option>
+                <option value="unmatched">Unmatched</option>
+                <option value="duplicate">Duplicate</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Original filename</th>
+                  <th>Topic #</th>
+                  <th>Official title</th>
+                  <th>New filename</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+
+          <div class="table-footer muted small" id="rowSummary">—</div>
+        </div>
+      </section>
+
+      <div id="toastHost" class="toast-host" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
+
