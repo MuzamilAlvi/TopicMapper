@@ -8,7 +8,8 @@ from typing import Dict, List, Optional, Tuple
 from backend.parser import parse_topics_txt, parse_video_folder
 from backend.report import FilePlan, build_report
 from backend.undo import RenameAction, UndoStack
-from backend.utils import VIDEO_EXTENSIONS, extract_topic_number
+from backend.utils import VIDEO_EXTENSIONS, extract_topic_number, normalize_topic_number
+
 
 
 def _safe_new_name(title: str) -> str:
@@ -25,8 +26,39 @@ class Renamer:
         self.undo_stack = UndoStack()
 
     def preview(self, folder: str, topics_txt: str) -> Dict:
-        topics = parse_topics_txt(topics_txt)  # topic_number -> title
+        topics_raw = parse_topics_txt(topics_txt)  # topic_number -> title
+        # Normalize topic numbers so "01" matches "1", "Topic 1", etc.
+        topics = {normalize_topic_number(k): v for k, v in topics_raw.items()}
         video_files = parse_video_folder(folder)
+
+        # Determine padding width from extracted topic numbers in filenames.
+        padding_width = 1
+        extracted_for_padding: List[str] = []
+        for path in video_files:
+            filename = os.path.basename(path)
+            ext = os.path.splitext(filename)[1]
+            if ext.lower() not in VIDEO_EXTENSIONS:
+                continue
+            tnum_raw = extract_topic_number(filename)
+            if not tnum_raw:
+                continue
+            extracted_for_padding.append(str(tnum_raw))
+        if extracted_for_padding:
+            padding_width = max(len(x) for x in extracted_for_padding)
+
+        # Naming pattern (optional) from config.json
+        naming_pattern = "{number} - {title}"
+        try:
+            import json
+            config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "config.json")
+            if os.path.exists(config_path):
+                with open(config_path, "r", encoding="utf-8") as f:
+                    cfg = json.load(f)
+                    naming_pattern = cfg.get("namingPattern", naming_pattern)
+        except Exception:
+            pass
+
+
 
         plans: List[FilePlan] = []
         # First pass: create matched/unmatched plans, but hold new_filename unset until duplicate detection
@@ -38,8 +70,11 @@ class Renamer:
             if ext.lower() not in VIDEO_EXTENSIONS:
                 continue
 
-            tnum = extract_topic_number(filename)
+            tnum_raw = extract_topic_number(filename)
+            tnum = normalize_topic_number(tnum_raw) if tnum_raw else None
             if not tnum or tnum not in topics:
+
+
                 plans.append(
                     FilePlan(
                         original_path=path,
