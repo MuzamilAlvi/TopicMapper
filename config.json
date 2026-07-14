@@ -1,0 +1,7 @@
+{
+  "app_name": "TopicMapper",
+  "video_extensions": [".mp4", ".mkv", ".avi", ".mov", ".webm", ".m4v"],
+  "reports_dir": "reports",
+  "logs_dir": "logs"
+}
+

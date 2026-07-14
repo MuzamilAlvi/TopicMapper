@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="520" viewBox="0 0 900 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+    <linearGradient id="grad" x1="20" y1="10" x2="110" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6D5EFC"/>
+      <stop offset="0.55" stop-color="#28C7F7"/>
+      <stop offset="1" stop-color="#20C997"/>
+    </linearGradient>
+
+    <linearGradient id="grad2" x1="80" y1="20" x2="220" y2="260" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6D5EFC"/>
+      <stop offset="0.45" stop-color="#28C7F7"/>
+      <stop offset="1" stop-color="#20C997"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <rect x="0" y="0" width="900" height="520" fill="rgba(255,255,255,0.04)"/>  <rect x="240" y="120" width="420" height="280" rx="50" fill="rgba(255,77,109,0.12)" stroke="rgba(255,77,109,0.35)" stroke-width="8"/>  <path d="M450 200L560 380H340L450 200Z" fill="rgba(255,77,109,0.22)" stroke="url(#grad2)" stroke-width="10"/>  <rect x="420" y="250" width="60" height="72" rx="30" fill="rgba(11,18,32,0.35)"/>  <circle cx="450" cy="360" r="14" fill="rgba(11,18,32,0.35)"/>  <text x="450" y="420" text-anchor="middle" font-family="ui-sans-serif, system-ui" font-size="20" font-weight="900" fill="rgba(231,238,252,0.82)">An error occurred</text></svg>

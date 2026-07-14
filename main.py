@@ -16,17 +16,23 @@ def main() -> None:
         resizable=True,
     )
 
-    # Expose backend API to the frontend
+    # Expose backend API to the frontend (pywebview exposes only callable functions)
     try:
         from backend.renamer import RenamerAPI
 
         api = RenamerAPI()
-        # pywebview requires expose() with a callable or a dict of callables.
-        window.expose(api.api_preview)
-        window.expose(api.api_rename_all)
-        window.expose(api.api_undo_last)
+        window.expose(
+            api.api_preview,
+            api.api_rename_all,
+            api.api_undo_last,
+            api.api_pick_folder,
+            api.api_pick_topics_file,
+        )
     except Exception as e:
         print("Failed to expose API:", e)
+
+
+
 
 
     webview.start(debug=False, http_server=False)

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="520" viewBox="0 0 900 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+    <linearGradient id="grad" x1="20" y1="10" x2="110" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6D5EFC"/>
+      <stop offset="0.55" stop-color="#28C7F7"/>
+      <stop offset="1" stop-color="#20C997"/>
+    </linearGradient>
+
+    <linearGradient id="grad2" x1="80" y1="20" x2="220" y2="260" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6D5EFC"/>
+      <stop offset="0.45" stop-color="#28C7F7"/>
+      <stop offset="1" stop-color="#20C997"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <rect x="0" y="0" width="900" height="520" fill="rgba(255,255,255,0.04)"/>  <rect x="80" y="80" width="740" height="360" rx="48" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)"/>  <path d="M240 250c0-70 56-126 126-126h72c50 0 90 40 90 90s-40 90-90 90h-64c-36 0-66 30-66 66s30 66 66 66h44" stroke="url(#grad)" stroke-width="20" stroke-linecap="round" fill="none"/>  <text x="460" y="300" text-anchor="middle" font-family="ui-sans-serif, system-ui" font-size="26" font-weight="900" fill="rgba(231,238,252,0.82)">Nothing to preview yet</text>  <text x="460" y="340" text-anchor="middle" font-family="ui-sans-serif, system-ui" font-size="16" font-weight="700" fill="rgba(231,238,252,0.62)">Select a videos folder and import topics</text></svg>

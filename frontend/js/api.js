@@ -4,12 +4,4 @@ function getApi() {
   return window.pywebview && window.pywebview.api ? window.pywebview.api : null;
 }
 
-function callApi(method, params) {
-  const api = getApi();
-  if (!api || typeof api[method] !== 'function') {
-    return Promise.reject(new Error('Backend API is not available.')); 
-  }
-
-  return api[method](...params);
-}
 

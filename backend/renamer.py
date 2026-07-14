@@ -200,6 +200,22 @@ class RenamerAPI:
     def __init__(self) -> None:
         self.renamer = Renamer()
 
+    def api_pick_folder(self) -> Dict:
+        from backend.dialogs import pick_directory
+
+        path = pick_directory()
+        if not path:
+            return {"ok": False, "message": "Folder not selected"}
+        return {"ok": True, "folder": path}
+
+    def api_pick_topics_file(self) -> Dict:
+        from backend.dialogs import pick_topics_txt
+
+        path = pick_topics_txt()
+        if not path:
+            return {"ok": False, "message": "Topics file not selected"}
+        return {"ok": True, "topics_txt": path}
+
     def api_preview(self, folder: str, topics_txt: str) -> Dict:
         return self.renamer.preview(folder, topics_txt)
 

@@ -165,13 +165,51 @@ function wireEvents() {
   const folderInput = el('folderInput');
   const topicsInput = el('topicsInput');
 
-  el('browseFolder').addEventListener('click', () => {
-    folderInput.click();
+  // Native dialogs via backend (reliable absolute paths)
+  el('browseFolder').addEventListener('click', async () => {
+    try {
+      const api = window.pywebview?.api;
+      if (!api) throw new Error('Backend API not available');
+      const res = await api.api_pick_folder();
+      if (!res?.ok) {
+        toast({ type: 'warning', title: 'Folder', message: res?.message || 'Not selected' });
+        return;
+      }
+      selectedFolderPath = res.folder;
+      el('folderValue').textContent = selectedFolderPath;
+      updateButtonStates();
+      toast({ type: 'success', title: 'Folder selected', message: selectedFolderPath });
+    } catch (e) {
+      toast({ type: 'error', title: 'Folder select failed', message: String(e?.message || e) });
+    }
   });
 
-  el('browseTopics').addEventListener('click', () => {
-    topicsInput.click();
+  el('browseTopics').addEventListener('click', async () => {
+    try {
+      const api = window.pywebview?.api;
+      if (!api) throw new Error('Backend API not available');
+      const res = await api.api_pick_topics_file();
+      if (!res?.ok) {
+        toast({ type: 'warning', title: 'Topics', message: res?.message || 'Not selected' });
+        return;
+      }
+      selectedTopicsText = null;
+      const filePath = res.topics_txt;
+
+      // Read topics file content using the native path by delegating to backend preview.
+      // For preview we still pass the path; backend reads it.
+      // Here we just store the path in selectedTopicsText so button gating works.
+      selectedTopicsText = filePath;
+      el('topicsValue').textContent = filePath.split('\\').pop().split('/').pop();
+      updateButtonStates();
+      toast({ type: 'success', title: 'Topics selected', message: 'Imported successfully.' });
+    } catch (e) {
+      toast({ type: 'error', title: 'Topics select failed', message: String(e?.message || e) });
+    }
   });
+
+  // Keep hidden inputs as a fallback (drag/drop can still work)
+
 
   folderInput.addEventListener('change', async (ev) => {
     const files = ev.target.files;
@@ -242,7 +280,7 @@ function wireEvents() {
 
   function prevent(e){ e.preventDefault(); e.stopPropagation(); }
 
-  ;[dropFolder, dropTopics].forEach(zone => {
+  [dropFolder, dropTopics].forEach(zone => {
     zone.addEventListener('dragover', (e) => {
       prevent(e);
       zone.style.borderColor = 'rgba(109,94,252,.65)';

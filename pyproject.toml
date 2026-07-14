@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "topicmapper"
+version = "0.1.0"
+description = "Intelligent Batch Video File Renaming System using Official Topic Names"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "TopicMapper Contributors" }]
+requires-python = ">=3.10"
+
+dependencies = [
+  "pywebview>=6.0",
+]
+
+[tool.setuptools]
+packages = ["backend"]
+

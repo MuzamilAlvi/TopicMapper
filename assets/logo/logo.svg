@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+    <linearGradient id="grad" x1="20" y1="10" x2="110" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6D5EFC"/>
+      <stop offset="0.55" stop-color="#28C7F7"/>
+      <stop offset="1" stop-color="#20C997"/>
+    </linearGradient>
+
+    <linearGradient id="grad2" x1="80" y1="20" x2="220" y2="260" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6D5EFC"/>
+      <stop offset="0.45" stop-color="#28C7F7"/>
+      <stop offset="1" stop-color="#20C997"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  \n  <rect x="35" y="35" width="440" height="440" rx="92" fill="rgba(10,16,30,0.45)" stroke="rgba(255,255,255,0.18)" filter="url(#shadow)"/>  <path d="M14 0" fill="none"/>
+  <rect x="112" y="204" width="179" height="143" rx="28" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.28)"/>  <path d="M148 261 L174 240 V291 L148 261 Z" fill="url(#grad)"/>  <path d="M138 256C138 209 168 179 209 179H245 C266 179 276 194 276 209 C276 225 266 235 245 235 H220 C209 235 199 245 199 261 C199 276 209 286 220 286H235" stroke="url(#grad2)" stroke-width="20" stroke-linecap="round"/>  <rect x="140" y="181" width="112" height="20" fill="transparent"/>  <text x="337" y="220" text-anchor="middle" font-family="ui-sans-serif, system-ui" font-size="23" font-weight="800" fill="url(#grad2)" fill-opacity="0.95">TM</text></svg>

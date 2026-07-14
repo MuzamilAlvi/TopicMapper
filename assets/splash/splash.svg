@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="600" viewBox="0 0 1200 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+    <linearGradient id="grad" x1="20" y1="10" x2="110" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6D5EFC"/>
+      <stop offset="0.55" stop-color="#28C7F7"/>
+      <stop offset="1" stop-color="#20C997"/>
+    </linearGradient>
+
+    <linearGradient id="grad2" x1="80" y1="20" x2="220" y2="260" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6D5EFC"/>
+      <stop offset="0.45" stop-color="#28C7F7"/>
+      <stop offset="1" stop-color="#20C997"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <rect x="0" y="0" width="1200" height="600" fill="url(#grad2)" opacity="0.12"/>  <rect x="80" y="80" width="1040" height="440" rx="48" fill="rgba(10,16,30,0.25)" stroke="rgba(255,255,255,0.22)"/>  <path d="M380 310C380 220 448 152 538 152H630C690 152 740 202 740 262C740 322 690 372 630 372H560C520 372 490 402 490 442C490 482 520 512 560 512H610" stroke="url(#grad)" stroke-width="28" stroke-linecap="round"/>  <text x="880" y="300" font-family="ui-sans-serif, system-ui" font-size="58" font-weight="900" fill="url(#grad)">TopicMapper</text>  <text x="880" y="370" font-family="ui-sans-serif, system-ui" font-size="24" font-weight="700" fill="rgba(231,238,252,0.75)">Intelligent Batch Renaming</text></svg>
