@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import json
 import os
+import re
 import traceback
-from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from backend.parser import parse_topics_txt, parse_video_folder
 from backend.report import FilePlan, build_report
@@ -11,58 +12,104 @@ from backend.undo import RenameAction, UndoStack
 from backend.utils import VIDEO_EXTENSIONS, extract_topic_number, normalize_topic_number
 
 
-
-def _safe_new_name(title: str) -> str:
+def _safe_title(title: str) -> str:
     # Windows reserved characters: <>:"/\\|?*
-    banned = '<>:\"/\\|?*'
+    banned = '<>:"/\\|?*'
     cleaned = "".join(ch if ch not in banned else "-" for ch in title)
     cleaned = cleaned.strip()
-    # avoid empty
     return cleaned or "Untitled"
+
+
+def _collapse_spaces(s: str) -> str:
+    return re.sub(r"\s{2,}", " ", s).strip()
+
+
+def _read_config() -> Dict[str, Any]:
+    try:
+        config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "config.json")
+        if os.path.exists(config_path):
+            with open(config_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+    except Exception:
+        pass
+    return {}
+
+
+def _get_naming_pattern(cfg: Dict[str, Any]) -> str:
+    # Requirement: Naming Pattern with these options.
+    # We'll store in config as `namingPattern`.
+    # Defaults to `{number} - {title}`.
+    return str(cfg.get("namingPattern", "{number} - {title}"))
 
 
 class Renamer:
     def __init__(self) -> None:
         self.undo_stack = UndoStack()
 
-    def preview(self, folder: str, topics_txt: str) -> Dict:
-        topics_raw = parse_topics_txt(topics_txt)  # topic_number -> title
-        # Normalize topic numbers so "01" matches "1", "Topic 1", etc.
-        topics = {normalize_topic_number(k): v for k, v in topics_raw.items()}
-        video_files = parse_video_folder(folder)
-
-        # Determine padding width from extracted topic numbers in filenames.
-        padding_width = 1
-        extracted_for_padding: List[str] = []
+    def _compute_padding_width(self, video_files: List[str]) -> int:
+        nums: List[str] = []
         for path in video_files:
-            filename = os.path.basename(path)
-            ext = os.path.splitext(filename)[1]
+            name = os.path.basename(path)
+            ext = os.path.splitext(name)[1]
             if ext.lower() not in VIDEO_EXTENSIONS:
                 continue
-            tnum_raw = extract_topic_number(filename)
-            if not tnum_raw:
-                continue
-            extracted_for_padding.append(str(tnum_raw))
-        if extracted_for_padding:
-            padding_width = max(len(x) for x in extracted_for_padding)
+            token = extract_topic_number(name)
+            if token:
+                nums.append(str(token).strip())
+        return max((len(x) for x in nums), default=1)
 
-        # Naming pattern (optional) from config.json
-        naming_pattern = "{number} - {title}"
+    def _format_number(self, token: str, pad_width: int, keep_token: bool) -> str:
+        # Requirement:
+        # - Extracted number token from filename must be preserved for display.
+        # - Numeric part must always be zero-padded to match largest sequence length.
+        # - If keep_token=True, we use token's exact numeric value with zero-padding.
+        n = str(token).strip()
+        if not n:
+            return "".zfill(pad_width)
+        # normalize_topic_number drops leading zeros for matching, but we want numeric value.
         try:
-            import json
-            config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "config.json")
-            if os.path.exists(config_path):
-                with open(config_path, "r", encoding="utf-8") as f:
-                    cfg = json.load(f)
-                    naming_pattern = cfg.get("namingPattern", naming_pattern)
+            numeric_value = str(int(n))
         except Exception:
-            pass
+            numeric_value = n.lstrip("0") or "0"
+        # Ensure padding to pad_width.
+        return numeric_value.zfill(pad_width)
 
+    def _render_filename(
+        self,
+        pattern: str,
+        number_formatted: str,
+        title: str,
+        ext: str,
+    ) -> str:
+        safe = _safe_title(title)
 
+        # Token replacement
+        out = pattern
+        out = out.replace("{number}", number_formatted)
+        out = out.replace("{title}", safe)
+        out = out.replace("{extension}", ext)
+        # Some patterns may not use title/number. Ensure no double spaces.
+        out = out.replace("  ", " ")
+        out = _collapse_spaces(out)
+
+        # Enforce extension preservation
+        # If pattern already includes extension token, avoid double extension.
+        if out.lower().endswith(ext.lower()):
+            return out
+        return f"{out}{ext}"
+
+    def preview(self, folder: str, topics_txt: str) -> Dict:
+        cfg = _read_config()
+        naming_pattern = _get_naming_pattern(cfg)
+
+        topics_raw = parse_topics_txt(topics_txt)  # {topic_number:int-like? -> title}
+        topics: Dict[str, str] = {normalize_topic_number(k): v for k, v in topics_raw.items()}
+
+        video_files = parse_video_folder(folder)
+        pad_width = self._compute_padding_width(video_files)
 
         plans: List[FilePlan] = []
-        # First pass: create matched/unmatched plans, but hold new_filename unset until duplicate detection
-        intermediate: List[Tuple[FilePlan, str]] = []  # (plan, intended_new_filename)
+        intermediate: List[Tuple[FilePlan, str]] = []  # (plan, new_filename)
 
         for path in video_files:
             filename = os.path.basename(path)
@@ -70,16 +117,13 @@ class Renamer:
             if ext.lower() not in VIDEO_EXTENSIONS:
                 continue
 
-            tnum_raw = extract_topic_number(filename)
-            tnum = normalize_topic_number(tnum_raw) if tnum_raw else None
-            if not tnum or tnum not in topics:
-
-
+            token_raw = extract_topic_number(filename)
+            if not token_raw:
                 plans.append(
                     FilePlan(
                         original_path=path,
                         original_filename=filename,
-                        topic_number=tnum,
+                        topic_number=None,
                         official_title=None,
                         new_filename=None,
                         status="unmatched",
@@ -88,13 +132,29 @@ class Renamer:
                 )
                 continue
 
-            title = topics[tnum]
-            safe_title = _safe_new_name(title)
-            new_filename = f"{safe_title}{ext}"
+            tnum_match = normalize_topic_number(token_raw)
+            if not tnum_match or tnum_match not in topics:
+                plans.append(
+                    FilePlan(
+                        original_path=path,
+                        original_filename=filename,
+                        topic_number=tnum_match,
+                        official_title=None,
+                        new_filename=None,
+                        status="unmatched",
+                        reason="No matching topic number/title found",
+                    )
+                )
+                continue
+
+            title = topics[tnum_match]
+            number_formatted = self._format_number(str(token_raw), pad_width, keep_token=True)
+            new_filename = self._render_filename(naming_pattern, number_formatted, title, ext)
+
             p = FilePlan(
                 original_path=path,
                 original_filename=filename,
-                topic_number=tnum,
+                topic_number=tnum_match,
                 official_title=title,
                 new_filename=new_filename,
                 status="matched",
@@ -102,12 +162,12 @@ class Renamer:
             )
             intermediate.append((p, new_filename))
 
-        # Duplicate detection: intended new filenames mapping
-        intended_to_plans: Dict[str, List[FilePlan]] = {}
+        # Duplicate detection by intended target filename
+        intended: Dict[str, List[FilePlan]] = {}
         for p, new_fn in intermediate:
-            intended_to_plans.setdefault(new_fn, []).append(p)
+            intended.setdefault(new_fn, []).append(p)
 
-        for new_fn, plist in intended_to_plans.items():
+        for new_fn, plist in intended.items():
             if len(plist) > 1:
                 for p in plist:
                     p.status = "duplicate"  # type: ignore
@@ -130,6 +190,8 @@ class Renamer:
                 for p in plans
             ],
             "report": build_report(plans),
+            "paddingWidth": pad_width,
+            "namingPattern": naming_pattern,
         }
 
     def rename_all(self, folder: str, topics_txt: str) -> Dict:
@@ -137,21 +199,19 @@ class Renamer:
         plans = preview_data["plans"]
 
         actions: List[RenameAction] = []
-        errors: List[Dict] = []
+        errors: List[Dict[str, Any]] = []
 
-        # Create actions only for matched plans
-        # Only rename items that were matched AND are not duplicates.
         matched = [p for p in plans if p["status"] == "matched"]
 
+        # Safe rename: rename only matched + not duplicates.
         for p in matched:
             old_path = p["original_path"]
             new_filename = p["new_filename"]
             if not new_filename:
                 continue
+
             new_path = os.path.join(folder, new_filename)
 
-
-            # If already exists for safety, skip
             if os.path.exists(new_path):
                 errors.append(
                     {
@@ -182,15 +242,11 @@ class Renamer:
                     }
                 )
 
-        # Store undo actions
         self.undo_stack.set_last(actions)
 
-        # Build final report with statuses based on preview + errors
-        # For simplicity, we keep preview statuses and add error count.
         report = preview_data["report"]
         report["counts"]["errors"] += len(errors)
         report["errors_extra"] = errors
-
         return report
 
     def undo_last(self) -> Dict:
@@ -199,14 +255,13 @@ class Renamer:
 
         actions = self.undo_stack.get_last()
         reverted = 0
-        undo_errors: List[Dict] = []
+        undo_errors: List[Dict[str, Any]] = []
 
-        # Reverse order to be safer
         for action in reversed(actions):
             try:
                 if os.path.exists(action.new_path):
+                    # Avoid overwriting if original path exists
                     if os.path.exists(action.original_path):
-                        # Avoid overwriting
                         undo_errors.append(
                             {
                                 "new_filename": action.new_filename,
@@ -219,7 +274,6 @@ class Renamer:
             except Exception as e:
                 undo_errors.append({"new_filename": action.new_filename, "error": str(e)})
 
-        # Clear after undo attempt
         self.undo_stack.clear()
 
         return {
