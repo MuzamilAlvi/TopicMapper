@@ -3,18 +3,28 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "topicmapper"
-version = "0.1.0"
-description = "Intelligent Batch Video File Renaming System using Official Topic Names"
+name = "TopicMapper"
+version = "1.0.0"
+description = "Intelligent Batch Video File Renaming System"
 readme = "README.md"
-license = { text = "MIT" }
-authors = [{ name = "TopicMapper Contributors" }]
 requires-python = ">=3.10"
+license = { text = "MIT" }
 
-dependencies = [
-  "pywebview>=6.0",
+authors = [
+    { name = "Muhammad Muzamil" }
 ]
 
-[tool.setuptools]
-packages = ["backend"]
+keywords = [
+    "rename",
+    "batch-renamer",
+    "video",
+    "education",
+    "python",
+    "desktop"
+]
 
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: Microsoft :: Windows",
+    "License :: OSI Approved :: MIT License"
+]

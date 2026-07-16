@@ -1,25 +1,42 @@
 # Python
 __pycache__/
 *.py[cod]
-*$py.class
+*.pyo
 
-# Virtual env
+# Virtual Environment
 .venv/
 venv/
+env/
 
-# pywebview / tooling
-*.log
+# IDE
+.vscode/
+.idea/
 
 # OS
-.DS_Store
 Thumbs.db
+Desktop.ini
+.DS_Store
 
-# Build outputs
+# Build
 build/
 dist/
-*.spec
+*.egg-info/
 
-# Reports/logs runtime
-reports/
+# Reports
+reports/*.txt
+reports/*.json
+
+# Logs
 logs/
+*.log
 
+# Cache
+.pytest_cache/
+.mypy_cache/
+
+# Temporary
+temp/
+tmp/
+
+# Environment
+.env

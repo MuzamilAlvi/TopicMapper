@@ -1,8 +1,26 @@
 # Changelog
 
-## 0.1.0
-- Initial TopicMapper scaffold (backend + PyWebView frontend)
-- Preview + safe rename + undo support
-- Report generation (in-memory; UI summary)
-- Branding updated to TopicMapper
+All notable changes to this project will be documented here.
 
+## [1.0.0] - Initial Release
+
+### Added
+
+- Intelligent Topic Detection
+- Batch Rename
+- Preview System
+- Undo Support
+- Rename Reports
+- Search
+- Filter
+- Progress Tracking
+- Modern Desktop UI
+
+### Fixed
+
+- Initial stable release
+
+### Security
+
+- Safe preview before rename
+- Undo support

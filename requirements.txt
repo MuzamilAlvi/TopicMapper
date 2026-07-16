@@ -1,2 +1,12 @@
-pywebview>=6.0
+# =========================
+# Runtime dependencies
+# =========================
+pywebview>=6.0,<7
+
+# =========================
+# Optional / development
+# =========================
+# Used by asset_generator.py to export PNGs from SVG assets.
+# The app runs without it; PNG export is skipped if unavailable.
+cairosvg>=2.7,<3
 
