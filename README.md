@@ -8,6 +8,7 @@ Automatically rename hundreds of downloaded educational videos using official to
 
 ---
 
+
 ![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)
@@ -20,6 +21,27 @@ Automatically rename hundreds of downloaded educational videos using official to
 **Rename • Preview • Undo • Reports • Smart Topic Detection**
 
 </div>
+
+---
+# 📑 Table of Contents
+
+- Overview
+- Features
+- Screenshots
+- Installation
+- Requirements
+- Usage
+- Project Structure
+- Architecture
+- Workflow
+- Technologies
+- Configuration
+- Roadmap
+- FAQ
+- Troubleshooting
+- Contributing
+- License
+- Author
 
 ---
 
@@ -240,27 +262,6 @@ TopicMapper includes a built-in Undo feature that restores previous filenames in
 
 ---
 
-# 📑 Table of Contents
-
-- Overview
-- Features
-- Screenshots
-- Installation
-- Requirements
-- Usage
-- Project Structure
-- Architecture
-- Workflow
-- Technologies
-- Configuration
-- Roadmap
-- FAQ
-- Troubleshooting
-- Contributing
-- License
-- Author
-
----
 # ⚙️ Installation
 
 TopicMapper is lightweight and easy to set up. Follow the instructions below to get started.
